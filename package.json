@@ -1,9 +1,9 @@
 {
-  "name": "agentforge",
+  "name": "claudeforge",
   "version": "1.0.0",
   "description": "Forge production-ready AI agent projects — agents, slash commands, memory, CI/CD, and devcontainers in one command",
   "bin": {
-    "agentforge": "./bin/cli.js"
+    "claudeforge": "./bin/cli.js"
   },
   "main": "./src/index.js",
   "files": [
@@ -18,7 +18,7 @@
     "start": "node bin/cli.js"
   },
   "keywords": [
-    "agentforge",
+    "claudeforge",
     "claude",
     "claude-code",
     "anthropic",
@@ -30,7 +30,7 @@
     "devcontainer",
     "github-actions"
   ],
-  "author": "",
+  "author": "Vaibhav Jain",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"

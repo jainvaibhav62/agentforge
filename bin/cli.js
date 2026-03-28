@@ -12,7 +12,7 @@ const createCommand = require('../src/commands/create');
 const githubCommand = require('../src/commands/github');
 
 program
-  .name('agentforge')
+  .name('claudeforge')
   .description('Forge production-ready AI agent projects — agents, slash commands, memory, CI/CD, and devcontainers in one command')
   .version(version);
 

@@ -1,0 +1,43 @@
+{
+  "name": "agentforge",
+  "version": "1.0.0",
+  "description": "Forge production-ready AI agent projects — agents, slash commands, memory, CI/CD, and devcontainers in one command",
+  "bin": {
+    "agentforge": "./bin/cli.js"
+  },
+  "main": "./src/index.js",
+  "files": [
+    "bin/",
+    "src/",
+    "templates/",
+    "README.md"
+  ],
+  "scripts": {
+    "test": "node --test src/**/*.test.js",
+    "link": "npm link",
+    "start": "node bin/cli.js"
+  },
+  "keywords": [
+    "agentforge",
+    "claude",
+    "claude-code",
+    "anthropic",
+    "scaffold",
+    "ai",
+    "agents",
+    "cli",
+    "boilerplate",
+    "devcontainer",
+    "github-actions"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "chalk": "4.1.2",
+    "commander": "^12.1.0",
+    "fs-extra": "^11.2.0"
+  }
+}

@@ -1,0 +1,5 @@
+recursive-include bin *.js
+recursive-include src *.js
+recursive-include templates *
+include package.json
+include README.md

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node bin/cli.js --help)",
+      "Bash(node bin/cli.js add --help)",
+      "Bash(node bin/cli.js project --help)",
+      "Bash(node:*)",
+      "Bash(npm install:*)"
+    ]
+  }
+}

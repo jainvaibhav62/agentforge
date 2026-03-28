@@ -8,7 +8,7 @@ async function status(options) {
   const targetDir = path.resolve(options.dir || process.cwd());
 
   console.log('');
-  console.log(chalk.bold.cyan('  agentforge') + chalk.dim('  —  Project Status'));
+  console.log(chalk.bold.cyan('  claudeforge') + chalk.dim('  —  Project Status'));
   console.log(chalk.dim('  ─────────────────────────────────────────'));
   console.log('');
 
@@ -75,7 +75,7 @@ async function status(options) {
     console.log('');
     console.log(chalk.bold('  Agents') + chalk.dim(` (${agents.length})`));
     if (agents.length === 0) {
-      console.log(chalk.dim('  (none — run `agentforge add agent <name>`)'));
+      console.log(chalk.dim('  (none — run `claudeforge add agent <name>`)'));
     } else {
       for (const agent of agents) {
         const name = agent.replace('.md', '');
@@ -92,7 +92,7 @@ async function status(options) {
     console.log('');
     console.log(chalk.bold('  Slash Commands') + chalk.dim(` (${commands.length})`));
     if (commands.length === 0) {
-      console.log(chalk.dim('  (none — run `agentforge add command <name>`)'));
+      console.log(chalk.dim('  (none — run `claudeforge add command <name>`)'));
     } else {
       for (const cmd of commands) {
         const name = cmd.replace('.md', '');
@@ -114,7 +114,7 @@ async function status(options) {
     console.log('');
     console.log(chalk.bold('  Skills') + chalk.dim(` (${skillDirs.length})`));
     if (skillDirs.length === 0) {
-      console.log(chalk.dim('  (none — run `agentforge add skill <name>`)'));
+      console.log(chalk.dim('  (none — run `claudeforge add skill <name>`)'));
     } else {
       for (const skill of skillDirs) {
         const desc = await readFrontmatterField(path.join(skillsDir, skill, 'SKILL.md'), 'description');
@@ -146,7 +146,7 @@ async function status(options) {
   }
 
   if (missingCore.length > 0) {
-    console.log(chalk.yellow(`  ⚠  ${missingCore.length} core file(s) missing. Run: `) + chalk.cyan('agentforge init'));
+    console.log(chalk.yellow(`  ⚠  ${missingCore.length} core file(s) missing. Run: `) + chalk.cyan('claudeforge init'));
     console.log('');
   } else {
     console.log('');
@@ -155,7 +155,7 @@ async function status(options) {
     console.log(`  ${chalk.dim('›')} ${chalk.cyan('/setup-project "description"')}   ${chalk.dim('AI-fills CLAUDE.md, agents, commands in the IDE chat')}`);
     console.log(`  ${chalk.dim('›')} ${chalk.cyan('/scaffold-structure')}             ${chalk.dim('creates src/, tests/, and starter files in IDE chat')}`);
     console.log(`  ${chalk.dim('›')} ${chalk.cyan('/project-health')}                 ${chalk.dim('audits your setup and suggests improvements in IDE chat')}`);
-    console.log(`  ${chalk.dim('›')} ${chalk.cyan('agentforge upgrade')}              ${chalk.dim('update hook scripts and built-in commands to latest')}`);
+    console.log(`  ${chalk.dim('›')} ${chalk.cyan('claudeforge upgrade')}              ${chalk.dim('update hook scripts and built-in commands to latest')}`);
     console.log('');
   }
 }

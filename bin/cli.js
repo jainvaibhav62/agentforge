@@ -35,9 +35,9 @@ No API key required. Works with any Claude model you already have access to
 (GitHub Copilot, Claude.ai, or any IDE with the Claude Code extension).
 
 Examples:
-  $ agentforge project "FastAPI REST API with PostgreSQL and Redis"
-  $ agentforge project "React + Tailwind dashboard with Supabase and Stripe"
-  $ agentforge project "Go microservice for payment processing" --dir ./my-service
+  $ claudeforge project "FastAPI REST API with PostgreSQL and Redis"
+  $ claudeforge project "React + Tailwind dashboard with Supabase and Stripe"
+  $ claudeforge project "Go microservice for payment processing" --dir ./my-service
 
 After running this, open the project in your IDE and run:
   /setup-project "your description"
@@ -60,7 +60,7 @@ addCmd
   .option('--color <color>',           'Agent color in Claude UI', 'blue')
   .addHelpText('after', `
 Example:
-  $ agentforge add agent sql-reviewer --description "Reviews SQL migrations for safety"
+  $ claudeforge add agent sql-reviewer --description "Reviews SQL migrations for safety"
   `)
   .action(addAgent);
 
@@ -72,7 +72,7 @@ addCmd
   .option('--description <text>',      'Command description (shown in command palette)')
   .addHelpText('after', `
 Example:
-  $ agentforge add command deploy --description "Deploy the app to staging"
+  $ claudeforge add command deploy --description "Deploy the app to staging"
   `)
   .action(addCommand);
 
@@ -85,7 +85,7 @@ addCmd
   .option('--no-user-invocable',       'Make this a Claude-only skill (user-invocable: false)')
   .addHelpText('after', `
 Example:
-  $ agentforge add skill api-conventions --description "Apply REST API naming conventions"
+  $ claudeforge add skill api-conventions --description "Apply REST API naming conventions"
   `)
   .action(addSkill);
 
@@ -123,8 +123,8 @@ features (CI/CD, devcontainer, GitHub templates). Then runs init + project
 automatically — one command to go from zero to a fully configured Claude project.
 
 Example:
-  $ agentforge create my-api
-  $ agentforge create          # prompts for name
+  $ claudeforge create my-api
+  $ claudeforge create          # prompts for name
   `)
   .action(createCommand);
 
@@ -147,8 +147,8 @@ Auto-detects your stack and generates:
   .devcontainer/devcontainer.json  — VS Code devcontainer with Claude Code
 
 Examples:
-  $ agentforge github
-  $ agentforge github --stack python --no-devcontainer
+  $ claudeforge github
+  $ claudeforge github --stack python --no-devcontainer
   `)
   .action(githubCommand);
 

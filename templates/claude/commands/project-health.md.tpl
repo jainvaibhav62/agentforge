@@ -67,4 +67,4 @@ Ordered by impact:
 
 ---
 
-End with: "Run `agentforge status` in the terminal for a machine-readable summary."
+End with: "Run `claudeforge status` in the terminal for a machine-readable summary."

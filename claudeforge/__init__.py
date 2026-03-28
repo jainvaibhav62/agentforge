@@ -1,2 +1,2 @@
-# one-stop-claude Python package
+# claudeforge Python package
 # This is a thin wrapper that delegates to the Node.js CLI.

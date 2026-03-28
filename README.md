@@ -1,14 +1,50 @@
-# agentforge
+# claudeforge
 
 > Forge production-ready AI agent projects — agents, slash commands, memory, CI/CD, and devcontainers in one command.
 
-[![npm version](https://img.shields.io/npm/v/agentforge)](https://www.npmjs.com/package/agentforge)
-[![PyPI version](https://img.shields.io/pypi/v/agentforge)](https://pypi.org/project/agentforge)
+[![npm version](https://img.shields.io/npm/v/claudeforge-cli)](https://www.npmjs.com/package/claudeforge-cli)
+[![PyPI version](https://img.shields.io/pypi/v/claudeforge)](https://pypi.org/project/claudeforge)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Node.js 18+](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org)
 [![Python 3.8+](https://img.shields.io/badge/python-%3E%3D3.8-blue)](https://python.org)
 
 **No API key required.** Works with any Claude model — GitHub Copilot, Claude.ai, or any IDE with the Claude Code extension.
+
+---
+
+## Requirements
+
+> **Node.js 18+ is required regardless of how you install claudeforge.**
+> The CLI is built on Node.js — the pip package is a thin wrapper that delegates to it automatically.
+
+| Requirement | Version | Notes |
+|-------------|---------|-------|
+| Node.js | 18+ | Required for the CLI — install first |
+| npm | any | Included with Node.js |
+| Python | 3.8+ | Only needed if installing via pip |
+| Claude Code | latest | IDE extension for slash commands |
+
+### Install Node.js (if you don't have it)
+
+```bash
+# macOS
+brew install node
+
+# macOS / Linux — via nvm (recommended)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+nvm install 20
+
+# Ubuntu / Debian
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Windows — download installer from https://nodejs.org
+```
+
+Verify:
+```bash
+node --version   # should print v18 or higher
+```
 
 ---
 
@@ -34,7 +70,7 @@
 
 ## What It Does
 
-`agentforge` gives you a production-ready Claude Code setup:
+`claudeforge` gives you a production-ready Claude Code setup:
 
 - **Interactive wizard** (`create`) — go from zero to a fully configured project in one command
 - **9 slash commands** for your daily workflow — `/setup-project`, `/commit`, `/review-pr`, `/scaffold-structure`, `/standup`, `/fix-issue`, `/explain-codebase`, `/project-health`, `/memory-sync`
@@ -50,22 +86,26 @@
 
 ### via npm (recommended)
 
+Best if you already have Node.js installed.
+
 ```bash
-npm install -g agentforge
+npm install -g claudeforge-cli
 ```
 
 ### via pip
 
+Best if you primarily work in Python environments. Node.js 18+ must still be installed on your system (see [Requirements](#requirements) above).
+
 ```bash
-pip install agentforge
+pip install claudeforge
 ```
 
-> **pip users:** Node.js 18+ must be on your PATH. The pip package delegates to the Node.js CLI automatically.
+> The pip package is a thin wrapper — when you run `claudeforge`, it locates Node.js on your PATH and delegates all commands to the Node.js CLI automatically. No manual Node.js setup is required beyond having it installed.
 
-Verify installation:
+### Verify installation
 
 ```bash
-agentforge --version
+claudeforge --version
 ```
 
 ---
@@ -75,7 +115,7 @@ agentforge --version
 ### Option A — Interactive wizard (fastest)
 
 ```bash
-agentforge create my-api
+claudeforge create my-api
 ```
 
 Walks you through project name, description, stack, and optional features (CI/CD, devcontainer, Docker). Then runs everything automatically.
@@ -87,13 +127,13 @@ Walks you through project name, description, stack, and optional features (CI/CD
 cd my-project
 
 # 2. Scaffold the Claude Code structure
-agentforge init
+claudeforge init
 
 # 3. Generate CI/CD and devcontainer
-agentforge github
+claudeforge github
 
 # 4. Prepare AI context (detects your tech stack automatically)
-agentforge project "FastAPI REST API with PostgreSQL and Redis"
+claudeforge project "FastAPI REST API with PostgreSQL and Redis"
 
 # 5. Open the project in VS Code / JetBrains / any IDE with Claude Code
 # 6. In the Claude Code chat window, run:
@@ -114,9 +154,9 @@ agentforge project "FastAPI REST API with PostgreSQL and Redis"
 ### `create` — Interactive wizard
 
 ```bash
-agentforge create my-api
-agentforge create              # prompts for name
-agentforge create --dir ~/Projects
+claudeforge create my-api
+claudeforge create              # prompts for name
+claudeforge create --dir ~/Projects
 ```
 
 Walks you through:
@@ -133,10 +173,10 @@ Then runs `init`, `project`, and `github` automatically — one command from zer
 ### `init` — Scaffold project structure
 
 ```bash
-agentforge init
-agentforge init --dir ./my-project
-agentforge init --dry-run     # preview without writing
-agentforge init --force       # overwrite existing files
+claudeforge init
+claudeforge init --dir ./my-project
+claudeforge init --dry-run     # preview without writing
+claudeforge init --force       # overwrite existing files
 ```
 
 Creates 25 files across the full Claude Code structure. Run this once per project.
@@ -168,17 +208,17 @@ Creates 25 files across the full Claude Code structure. Run this once per projec
 ### `project` — Prepare AI context
 
 ```bash
-agentforge project "describe your project in plain English"
+claudeforge project "describe your project in plain English"
 ```
 
 Detects your tech stack from existing files (`package.json`, `go.mod`, `requirements.txt`, etc.), writes a `SETUP_CONTEXT.md` with full context, and tells you the exact command to run in Claude Code chat.
 
 ```bash
 # Examples
-agentforge project "Next.js SaaS with Stripe, Prisma, and Clerk auth"
-agentforge project "Go gRPC microservice with PostgreSQL and Redis cache"
-agentforge project "Django REST API with Celery, RabbitMQ, and S3"
-agentforge project "Rust CLI tool for parsing and transforming CSV files"
+claudeforge project "Next.js SaaS with Stripe, Prisma, and Clerk auth"
+claudeforge project "Go gRPC microservice with PostgreSQL and Redis cache"
+claudeforge project "Django REST API with Celery, RabbitMQ, and S3"
+claudeforge project "Rust CLI tool for parsing and transforming CSV files"
 ```
 
 After running, open Claude Code and run `/setup-project "your description"` in chat.
@@ -189,24 +229,24 @@ After running, open Claude Code and run `/setup-project "your description"` in c
 
 ```bash
 # Add a specialized agent
-agentforge add agent <name> [--description "..."] [--model sonnet|opus|haiku] [--color blue]
+claudeforge add agent <name> [--description "..."] [--model sonnet|opus|haiku] [--color blue]
 
 # Add a slash command
-agentforge add command <name> [--description "..."]
+claudeforge add command <name> [--description "..."]
 
 # Add a skill
-agentforge add skill <name> [--description "..."] [--no-user-invocable]
+claudeforge add skill <name> [--description "..."] [--no-user-invocable]
 ```
 
 ```bash
 # Real examples
-agentforge add agent sql-reviewer \
+claudeforge add agent sql-reviewer \
   --description "Reviews SQL migrations for safety, performance, and rollback safety"
 
-agentforge add command deploy \
+claudeforge add command deploy \
   --description "Run pre-deploy checks, deploy to staging, run smoke tests"
 
-agentforge add skill api-conventions \
+claudeforge add skill api-conventions \
   --description "Apply REST API naming and response conventions before writing endpoints"
 ```
 
@@ -224,10 +264,10 @@ agentforge add skill api-conventions \
 ### `github` — CI/CD & devcontainer
 
 ```bash
-agentforge github
-agentforge github --dry-run          # preview without writing
-agentforge github --stack python     # force stack detection
-agentforge github --no-devcontainer  # skip devcontainer
+claudeforge github
+claudeforge github --dry-run          # preview without writing
+claudeforge github --stack python     # force stack detection
+claudeforge github --no-devcontainer  # skip devcontainer
 ```
 
 Auto-detects your stack and generates:
@@ -248,8 +288,8 @@ CI workflows are generated for: **Node.js**, **Python**, **Go**, **Rust**, and *
 ### `status` — Show what's configured
 
 ```bash
-agentforge status
-agentforge status --dir ./my-project
+claudeforge status
+claudeforge status --dir ./my-project
 ```
 
 Prints a full summary:
@@ -269,9 +309,9 @@ Prints a full summary:
 ### `upgrade` — Update built-in templates
 
 ```bash
-agentforge upgrade             # update hooks, rules, built-in commands
-agentforge upgrade --dry-run   # preview changes
-agentforge upgrade --all       # also update CLAUDE.md, settings.json, agents (⚠ overwrites edits)
+claudeforge upgrade             # update hooks, rules, built-in commands
+claudeforge upgrade --dry-run   # preview changes
+claudeforge upgrade --all       # also update CLAUDE.md, settings.json, agents (⚠ overwrites edits)
 ```
 
 By default, only **infrastructure files** are updated (hook scripts, rules, built-in slash commands). Your edited files (`CLAUDE.md`, `settings.json`, custom agents) are untouched.
@@ -286,7 +326,7 @@ Run these in the Claude Code chat window in VS Code, JetBrains, or any Claude Co
 
 | Command | When to run | What it does |
 |---------|-------------|-------------|
-| `/setup-project "description"` | After `agentforge init` | Fills in CLAUDE.md, settings, .env.example, .mcp.json, memory, generates 2–4 project-specific agents and commands, then documents every file it creates |
+| `/setup-project "description"` | After `claudeforge init` | Fills in CLAUDE.md, settings, .env.example, .mcp.json, memory, generates 2–4 project-specific agents and commands, then documents every file it creates |
 | `/scaffold-structure` | After `/setup-project` | Creates the actual `src/`, `tests/`, `cmd/` directory structure with real starter files for your stack |
 | `/project-health` | Weekly / after big changes | Audits your setup: checks CLAUDE.md completeness, hook coverage, memory fill level, and gives prioritized improvement suggestions |
 | `/memory-sync` | End of work session | Reviews the session and updates `memory/` files with preferences, decisions, and project context |
@@ -376,26 +416,41 @@ The CLI handles file scaffolding. The AI work happens inside the IDE where Claud
 
 ## Troubleshooting
 
-**`agentforge: command not found`**
+**`claudeforge: command not found` after npm install**
 ```bash
-# npm
-npm install -g agentforge
-# pip (ensure ~/.local/bin is on PATH)
-pip install agentforge
-export PATH="$HOME/.local/bin:$PATH"
+# Ensure npm global bin is on PATH
+export PATH="$(npm prefix -g)/bin:$PATH"
+# Add to ~/.zshrc or ~/.bashrc to persist
 ```
 
-**pip install: `Node.js is required`**
+**`claudeforge: command not found` after pip install**
+```bash
+# Ensure pip user bin is on PATH
+export PATH="$HOME/.local/bin:$PATH"
+# Add to ~/.zshrc or ~/.bashrc to persist
+```
+
+**`Node.js is required but was not found on PATH`**
+
+This happens when installing via pip — Node.js must be installed separately.
+
 ```bash
 # macOS
 brew install node
-# Ubuntu/Debian
+
+# macOS / Linux — via nvm
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+nvm install 20
+
+# Ubuntu / Debian
 curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 ```
 
+After installing Node.js, open a new terminal and retry.
+
 **`/setup-project` didn't generate anything**
-Make sure you ran `agentforge init` first — the `.claude/commands/` directory must exist for slash commands to work.
+Make sure you ran `claudeforge init` first — the `.claude/commands/` directory must exist for slash commands to work.
 
 **Hook scripts not running**
 ```bash
@@ -404,25 +459,14 @@ ls -la .claude/hooks/
 # Re-apply execute permission
 chmod 755 .claude/hooks/*.sh
 # Re-run init to restore hooks
-agentforge init --force
+claudeforge init --force
 ```
 
-**`agentforge upgrade` overwrote my custom changes**
+**`claudeforge upgrade` overwrote my custom changes**
 Only use `--all` flag when you want to reset user-owned files. Without `--all`, only infrastructure files (hooks, rules, built-in commands) are updated.
 
 **Slash commands not showing in IDE**
 Confirm you're running Claude Code (not just Copilot Chat). The `.claude/commands/` directory must be in the project root. Restart the IDE after running `init`.
-
----
-
-## Requirements
-
-| Requirement | Version | Notes |
-|-------------|---------|-------|
-| Node.js | 18+ | Required for the CLI |
-| npm | any | Included with Node.js |
-| Python | 3.8+ | Only if installing via pip |
-| Claude Code | latest | IDE extension for slash commands |
 
 ---
 

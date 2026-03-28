@@ -21,7 +21,7 @@ async function github(options) {
   }
 
   console.log('');
-  console.log(chalk.bold.cyan('  agentforge') + chalk.dim('  —  GitHub Setup'));
+  console.log(chalk.bold.cyan('  claudeforge') + chalk.dim('  —  GitHub Setup'));
   console.log(chalk.dim('  ─────────────────────────────────────────'));
   if (dryRun) console.log(chalk.bold.yellow('  [DRY RUN] No files will be written'));
   console.log('');
@@ -114,7 +114,7 @@ async function github(options) {
   logger.hints('What to do next:', [
     { cmd: 'git add .github/ .devcontainer/',        note: 'stage the new files' },
     { cmd: '/setup-project "your description"',       note: 'run in Claude Code chat — Claude can refine the CI workflow for your stack' },
-    { cmd: 'agentforge status',                       note: 'confirm full project setup' },
+    { cmd: 'claudeforge status',                       note: 'confirm full project setup' },
   ]);
 }
 
@@ -451,7 +451,7 @@ function buildDevcontainer(stack) {
   }[stack] || 'echo done';
 
   return JSON.stringify({
-    name: 'agentforge Dev Container',
+    name: 'claudeforge Dev Container',
     image,
     features: features.length > 0 ? Object.fromEntries(features.map(f => {
       const [key, val] = f.split(': ');

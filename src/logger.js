@@ -12,7 +12,7 @@ const COLORS = {
 
 function banner(dryRun) {
   console.log('');
-  console.log(chalk.bold.cyan('  agentforge') + chalk.dim('  —  Claude Code Project Scaffolder'));
+  console.log(chalk.bold.cyan('  claudeforge') + chalk.dim('  —  Claude Code Project Scaffolder'));
   console.log(chalk.dim('  ─────────────────────────────────────────'));
   if (dryRun) console.log(chalk.bold.yellow('  [DRY RUN] No files will be written'));
   console.log('');
@@ -55,10 +55,10 @@ function summary(stats, dryRun) {
   );
   console.log('');
   _hints('What to do next:', [
-    { cmd: 'agentforge project "describe your project"', note: 'prepares AI context for the IDE' },
+    { cmd: 'claudeforge project "describe your project"', note: 'prepares AI context for the IDE' },
     { cmd: '/setup-project "describe your project"',          note: 'run in Claude Code chat — fills in everything' },
     { cmd: '/scaffold-structure',                             note: 'run in Claude Code chat — creates src/, tests/, etc.' },
-    { cmd: 'agentforge status',                          note: 'see everything configured so far' },
+    { cmd: 'claudeforge status',                          note: 'see everything configured so far' },
   ]);
 }
 

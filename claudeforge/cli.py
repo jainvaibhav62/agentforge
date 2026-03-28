@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Entry point for the `one-stop-claude` pip package.
+Entry point for the `claudeforge` pip package.
 
 Locates the Node.js CLI and delegates all commands to it.
 
@@ -30,15 +30,15 @@ def _resolve_cli_js() -> Path:
     if bundled.exists():
         return bundled
 
-    # Dev / editable-install mode: walk up from one_stop_claude/ to repo root
+    # Dev / editable-install mode: walk up from claudeforge/ to repo root
     repo_root = pkg_dir.parent
     dev_cli = repo_root / "bin" / "cli.js"
     if dev_cli.exists():
         return dev_cli
 
     _die(
-        "Could not locate the one-stop-claude Node.js entry point.\n"
-        "  If you installed via pip, try reinstalling: pip install --force-reinstall one-stop-claude\n"
+        "Could not locate the claudeforge Node.js entry point.\n"
+        "  If you installed via pip, try reinstalling: pip install --force-reinstall claudeforge\n"
         "  If you're developing locally, ensure bin/cli.js exists in the repo root."
     )
 

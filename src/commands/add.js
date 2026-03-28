@@ -12,7 +12,7 @@ async function addAgent(name, options) {
 
   if (!name || !name.trim()) {
     logger.error('Please provide an agent name.');
-    console.log(chalk.dim('  Example: agentforge add agent api-reviewer'));
+    console.log(chalk.dim('  Example: claudeforge add agent api-reviewer'));
     process.exit(1);
   }
 
@@ -61,7 +61,7 @@ You are a specialized agent for [task].
   logger.hints('What to do next:', [
     { cmd: `open .claude/agents/${slug}.md`,           note: 'edit the system prompt — be specific about what it reviews' },
     { cmd: `/review-pr`,                               note: 'test the agent by having it review your current branch' },
-    { cmd: `agentforge status`,                   note: 'confirm the agent appears in your project' },
+    { cmd: `claudeforge status`,                   note: 'confirm the agent appears in your project' },
   ]);
 }
 
@@ -70,7 +70,7 @@ async function addCommand(name, options) {
 
   if (!name || !name.trim()) {
     logger.error('Please provide a command name.');
-    console.log(chalk.dim('  Example: agentforge add command deploy'));
+    console.log(chalk.dim('  Example: claudeforge add command deploy'));
     process.exit(1);
   }
 
@@ -112,7 +112,7 @@ allowed-tools: Bash, Read, Edit
   logger.hints('What to do next:', [
     { cmd: `open .claude/commands/${slug}.md`,         note: 'edit the ## Task section — add real instructions' },
     { cmd: `/${slug}`,                                 note: 'run in Claude Code chat to test it' },
-    { cmd: `agentforge add command <name>`,       note: 'add another command for your workflow' },
+    { cmd: `claudeforge add command <name>`,       note: 'add another command for your workflow' },
   ]);
 }
 
@@ -121,7 +121,7 @@ async function addSkill(name, options) {
 
   if (!name || !name.trim()) {
     logger.error('Please provide a skill name.');
-    console.log(chalk.dim('  Example: agentforge add skill database-patterns'));
+    console.log(chalk.dim('  Example: claudeforge add skill database-patterns'));
     process.exit(1);
   }
 
@@ -172,7 +172,7 @@ user-invocable: ${userInvocable}
   console.log(`  ${chalk.green('✓')} Created ${chalk.cyan(`.claude/skills/${slug}/SKILL.md`)}`);
   logger.hints('What to do next:', [
     { cmd: `open .claude/skills/${slug}/SKILL.md`,     note: 'fill in the Instructions section with specific conventions' },
-    { cmd: `agentforge status`,                   note: 'verify the skill appears in your project summary' },
+    { cmd: `claudeforge status`,                   note: 'verify the skill appears in your project summary' },
     { cmd: `/project-health`,                          note: 'run in Claude Code chat to audit your full setup' },
   ]);
 }

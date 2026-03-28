@@ -53,12 +53,12 @@ async function upgrade(options) {
   const dryRun = options.dryRun || false;
 
   if (!await fs.pathExists(path.join(targetDir, '.claude'))) {
-    logger.error('No .claude/ directory found. Run `agentforge init` first.');
+    logger.error('No .claude/ directory found. Run `claudeforge init` first.');
     process.exit(1);
   }
 
   console.log('');
-  console.log(chalk.bold.cyan('  agentforge') + chalk.dim('  —  Upgrade Templates'));
+  console.log(chalk.bold.cyan('  claudeforge') + chalk.dim('  —  Upgrade Templates'));
   console.log(chalk.dim('  ─────────────────────────────────────────'));
   if (dryRun) console.log(chalk.bold.yellow('  [DRY RUN] No files will be written'));
   if (includeAll) console.log(chalk.yellow('  [--all] Including user-owned files (CLAUDE.md, settings.json, etc.)'));
@@ -106,7 +106,7 @@ async function upgrade(options) {
     console.log(chalk.bold('  What to do next:'));
     console.log('');
     console.log(`  ${chalk.dim('›')} ${chalk.cyan('/project-health')}     ${chalk.dim('audit your setup to see if anything else needs attention')}`);
-    console.log(`  ${chalk.dim('›')} ${chalk.cyan('agentforge status')}      ${chalk.dim('verify the updated files look correct')}`);
+    console.log(`  ${chalk.dim('›')} ${chalk.cyan('claudeforge status')}      ${chalk.dim('verify the updated files look correct')}`);
     console.log('');
   }
 }

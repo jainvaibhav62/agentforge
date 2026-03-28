@@ -41,10 +41,10 @@ async function create(name, options) {
   const parentDir = path.resolve(options.dir || process.cwd());
 
   console.log('');
-  console.log(chalk.bold.cyan('  agentforge') + chalk.dim('  —  Create New Project'));
+  console.log(chalk.bold.cyan('  claudeforge') + chalk.dim('  —  Create New Project'));
   console.log(chalk.dim('  ─────────────────────────────────────────'));
   console.log('');
-  console.log(chalk.dim('  Answer a few questions and agentforge will scaffold a fully configured'));
+  console.log(chalk.dim('  Answer a few questions and claudeforge will scaffold a fully configured'));
   console.log(chalk.dim('  Claude Code project ready for AI-assisted development.'));
   console.log('');
 

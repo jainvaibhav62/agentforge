@@ -95,9 +95,9 @@ const MANIFEST = [
   // Project root
   { type: 'file', src: 'CLAUDE.md.tpl',       dest: 'CLAUDE.md' },
   { type: 'file', src: 'CLAUDE.local.md.tpl', dest: 'CLAUDE.local.md' },
-  { type: 'file', src: '.env.example.tpl',    dest: '.env.example' },
+  { type: 'file', src: 'env.example.tpl',     dest: '.env.example' },
   { type: 'file', src: 'mcp.json.tpl',        dest: '.mcp.json' },
-  { type: 'file', src: '.gitignore.tpl',      dest: '.gitignore' },
+  { type: 'file', src: 'gitignore.tpl',        dest: '.gitignore' },
 ];
 
 async function upgrade(options) {

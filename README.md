@@ -481,6 +481,15 @@ export PATH="$HOME/.local/bin:$PATH"
 uv tool install claudeforge
 ```
 
+**`ENOENT: no such file or directory ... .env.example.tpl` after upgrade**
+
+This was a bug in versions prior to 1.0.8 where dotfile templates were excluded during packaging. Upgrade to the latest version to fix it:
+```bash
+uv tool upgrade claudeforge
+# or
+npm update -g claudeforge-cli
+```
+
 **`Node.js is required but was not found on PATH`**
 
 This happens when installing via pip — Node.js must be installed separately.

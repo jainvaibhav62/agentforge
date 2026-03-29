@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>claudeforge — Scaffold AI agent projects in seconds</title>
+  <meta name="description" content="claudeforge is a CLI that scaffolds production-ready Claude Code projects with agents, slash commands, memory, CI/CD, and devcontainers in one command." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0b0f;
+      --bg-card: #111318;
+      --bg-card2: #161820;
+      --border: rgba(255,255,255,0.07);
+      --accent: #6c63ff;
+      --accent2: #a78bfa;
+      --accent3: #38bdf8;
+      --green: #4ade80;
+      --yellow: #fbbf24;
+      --red: #f87171;
+      --orange: #fb923c;
+      --text: #e8e9f0;
+      --text-muted: #6b7280;
+      --text-dim: #9ca3af;
+      --glow: rgba(108,99,255,0.3);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; width: 100%; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(10,11,15,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      animation: slideDown 0.6s ease both;
+    }
+    .nav-logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--accent2);
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--text-muted); }
+    .nav-links { display: flex; gap: 1.8rem; list-style: none; }
+    .nav-links a {
+      color: var(--text-dim); text-decoration: none; font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--accent); color: #fff;
+      padding: 0.45rem 1.1rem; border-radius: 6px;
+      font-size: 0.875rem; font-weight: 600; text-decoration: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    /* ─── HERO ────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      padding: 8rem 2rem 4rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-bg {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+    .hero-bg::before {
+      content: '';
+      position: absolute; top: -30%; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 900px;
+      background: radial-gradient(ellipse, rgba(108,99,255,0.12) 0%, transparent 70%);
+      animation: pulse 6s ease-in-out infinite;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; bottom: -10%; right: -10%;
+      width: 600px; height: 600px;
+      background: radial-gradient(ellipse, rgba(56,189,248,0.06) 0%, transparent 70%);
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: rgba(108,99,255,0.12); border: 1px solid rgba(108,99,255,0.3);
+      padding: 0.35rem 1rem; border-radius: 100px;
+      font-size: 0.8rem; font-weight: 500; color: var(--accent2);
+      margin-bottom: 1.5rem;
+      animation: fadeInUp 0.7s 0.1s ease both;
+    }
+    .badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      animation: blink 2s ease infinite;
+    }
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      font-weight: 800; letter-spacing: -0.035em; line-height: 1.1;
+      max-width: 780px;
+      animation: fadeInUp 0.7s 0.2s ease both;
+    }
+    h1 em { font-style: normal; color: var(--accent2); }
+    .hero-sub {
+      margin-top: 1.2rem; max-width: 580px;
+      font-size: 1.1rem; color: var(--text-dim); line-height: 1.7;
+      animation: fadeInUp 0.7s 0.3s ease both;
+    }
+    .hero-actions {
+      margin-top: 2.2rem; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+      animation: fadeInUp 0.7s 0.4s ease both;
+    }
+    .btn-primary {
+      background: var(--accent); color: #fff; border: none;
+      padding: 0.75rem 1.8rem; border-radius: 8px;
+      font-size: 0.95rem; font-weight: 600; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      box-shadow: 0 0 30px rgba(108,99,255,0.35);
+      transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 45px rgba(108,99,255,0.5); }
+    .btn-secondary {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.75rem 1.8rem; border-radius: 8px;
+      font-size: 0.95rem; font-weight: 500; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
+
+    /* ─── INSTALL STRIP ───────────────────────────────── */
+    .install-strip {
+      margin-top: 3rem;
+      animation: fadeInUp 0.7s 0.5s ease both;
+    }
+    .install-strip p { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.7rem; }
+    .install-tabs {
+      display: flex; gap: 0.4rem; justify-content: center; margin-bottom: 0.8rem;
+    }
+    .tab-btn {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text-dim); padding: 0.3rem 0.8rem; border-radius: 5px;
+      font-size: 0.75rem; font-family: 'JetBrains Mono', monospace;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .tab-btn.active { background: rgba(108,99,255,0.15); border-color: var(--accent); color: var(--accent2); }
+    .install-cmd {
+      display: none;
+      background: var(--bg-card); border: 1px solid var(--border);
+      padding: 0.7rem 1.2rem; border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+      align-items: center; gap: 0.8rem;
+    }
+    .install-cmd.active { display: flex; }
+    .install-cmd code { color: var(--accent2); }
+    .copy-btn {
+      background: transparent; border: none; cursor: pointer;
+      color: var(--text-muted); font-size: 0.75rem;
+      margin-left: auto; padding: 0.2rem 0.5rem;
+      border-radius: 4px; transition: color 0.2s, background 0.2s;
+    }
+    .copy-btn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+
+    /* ─── TERMINAL DEMO ───────────────────────────────── */
+    .terminal-wrapper {
+      width: 100%; max-width: 720px; margin: 3rem auto 0;
+      animation: fadeInUp 0.7s 0.6s ease both;
+    }
+    .terminal {
+      background: #0d0f14; border: 1px solid var(--border);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 25px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03);
+    }
+    .terminal-bar {
+      background: #161820; padding: 0.8rem 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+    .terminal-title {
+      margin: 0 auto; font-size: 0.75rem; color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .terminal-body { padding: 1.2rem 1.4rem; min-height: 200px; }
+    .t-line {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem; line-height: 1.8;
+      opacity: 0; transform: translateY(4px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .t-line.visible { opacity: 1; transform: translateY(0); }
+    .t-prompt { color: var(--accent2); }
+    .t-cmd { color: var(--text); }
+    .t-out { color: var(--text-muted); }
+    .t-success { color: var(--green); }
+    .t-info { color: var(--accent3); }
+    .t-warn { color: var(--yellow); }
+    .t-cursor {
+      display: inline-block; width: 8px; height: 14px;
+      background: var(--accent2); vertical-align: middle;
+      animation: blink 1s step-end infinite; margin-left: 2px;
+    }
+
+    /* ─── SECTION BASE ───────────────────────────────── */
+    section { padding: 6rem 2rem; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800; letter-spacing: -0.03em; line-height: 1.15;
+    }
+    .section-title em { font-style: normal; color: var(--accent2); }
+    .section-sub {
+      margin-top: 0.8rem; color: var(--text-dim);
+      font-size: 1.05rem; max-width: 520px; line-height: 1.7;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* ─── FEATURES ───────────────────────────────────── */
+    #features { background: var(--bg); }
+    .features-header { text-align: center; margin-bottom: 4rem; }
+    .features-header .section-sub { margin: 0.8rem auto 0; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.2rem;
+    }
+    .feature-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.8rem;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      opacity: 0; transform: translateY(24px);
+    }
+    .feature-card.visible {
+      opacity: 1; transform: translateY(0);
+    }
+    .feature-card:hover {
+      border-color: rgba(108,99,255,0.3);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+    }
+    .feature-icon {
+      width: 42px; height: 42px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 1rem;
+    }
+    .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.875rem; color: var(--text-dim); line-height: 1.65; }
+
+    /* ─── HOW IT WORKS ───────────────────────────────── */
+    #how { background: linear-gradient(180deg, var(--bg) 0%, var(--bg-card2) 100%); }
+    .steps { display: grid; gap: 1rem; max-width: 800px; margin: 3.5rem auto 0; }
+    .step {
+      display: flex; gap: 1.4rem; align-items: flex-start;
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem 1.8rem;
+      opacity: 0; transform: translateX(-20px);
+      transition: opacity 0.5s, transform 0.5s, border-color 0.3s;
+    }
+    .step.visible { opacity: 1; transform: translateX(0); }
+    .step:hover { border-color: rgba(108,99,255,0.25); }
+    .step-num {
+      flex-shrink: 0; width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.85rem;
+    }
+    .step-content h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .step-content p { font-size: 0.855rem; color: var(--text-dim); line-height: 1.6; }
+    .step-code {
+      margin-top: 0.6rem;
+      background: rgba(0,0,0,0.3); border: 1px solid var(--border);
+      padding: 0.4rem 0.8rem; border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+      color: var(--accent2); display: inline-block;
+    }
+
+    /* ─── EXAMPLES ───────────────────────────────────── */
+    #examples { background: var(--bg-card2); }
+    .examples-layout {
+      display: grid; grid-template-columns: 240px 1fr;
+      gap: 2rem; margin-top: 3rem;
+    }
+    .example-tabs { display: flex; flex-direction: column; gap: 0.5rem; }
+    .ex-tab {
+      background: transparent; border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.8rem 1rem;
+      text-align: left; cursor: pointer;
+      transition: all 0.2s; color: var(--text-dim);
+      font-size: 0.85rem; font-family: 'Inter', sans-serif;
+    }
+    .ex-tab .ex-tab-label { font-weight: 600; color: var(--text-dim); display: block; margin-bottom: 0.2rem; }
+    .ex-tab .ex-tab-sub { font-size: 0.75rem; color: var(--text-muted); }
+    .ex-tab.active {
+      background: rgba(108,99,255,0.12);
+      border-color: rgba(108,99,255,0.4);
+      color: var(--text);
+    }
+    .ex-tab.active .ex-tab-label { color: var(--accent2); }
+    .example-panel { display: none; }
+    .example-panel.active { display: block; }
+    .example-desc {
+      font-size: 0.9rem; color: var(--text-dim); margin-bottom: 1.2rem; line-height: 1.65;
+    }
+    .code-block {
+      background: #0a0b0e; border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden;
+    }
+    .code-header {
+      background: var(--bg-card2); padding: 0.6rem 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .code-header span { font-size: 0.75rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+    .copy-code-btn {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--text-muted); font-size: 0.7rem; padding: 0.2rem 0.6rem;
+      border-radius: 4px; cursor: pointer; transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .copy-code-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.2); }
+    .code-body {
+      padding: 1.2rem 1.4rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+      line-height: 2; overflow-x: auto;
+    }
+    .code-body .c-prompt { color: var(--accent2); }
+    .code-body .c-cmd { color: var(--text); }
+    .code-body .c-comment { color: var(--text-muted); }
+    .code-body .c-success { color: var(--green); }
+    .code-body .c-info { color: var(--accent3); }
+    .code-body .c-warn { color: var(--yellow); }
+    .code-body .c-out { color: #7c8a9e; }
+
+    /* ─── COMMANDS REFERENCE ─────────────────────────── */
+    #commands { background: var(--bg); }
+    .commands-split {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2rem; margin-top: 3rem;
+    }
+    .cmd-group h3 {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--accent); margin-bottom: 1rem;
+    }
+    .cmd-list { display: flex; flex-direction: column; gap: 0.5rem; }
+    .cmd-item {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.75rem 1rem;
+      display: flex; gap: 0.8rem; align-items: flex-start;
+      transition: border-color 0.2s;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 0.4s, transform 0.4s, border-color 0.2s;
+    }
+    .cmd-item.visible { opacity: 1; transform: translateY(0); }
+    .cmd-item:hover { border-color: rgba(108,99,255,0.25); }
+    .cmd-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem; font-weight: 600;
+      color: var(--accent2); flex-shrink: 0; min-width: 130px;
+    }
+    .cmd-desc { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
+
+    /* ─── STATS ───────────────────────────────────────── */
+    #stats {
+      background: linear-gradient(135deg, rgba(108,99,255,0.08) 0%, rgba(56,189,248,0.05) 100%);
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      padding: 4rem 2rem;
+    }
+    .stats-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem; text-align: center; max-width: 900px; margin: 0 auto;
+    }
+    .stat {
+      opacity: 0; transform: translateY(16px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .stat.visible { opacity: 1; transform: translateY(0); }
+    .stat-num {
+      font-size: 2.8rem; font-weight: 800; letter-spacing: -0.04em;
+      background: linear-gradient(135deg, var(--accent2), var(--accent3));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .stat-label { font-size: 0.85rem; color: var(--text-dim); margin-top: 0.3rem; }
+
+    /* ─── AGENT SHOWCASE ──────────────────────────────── */
+    #agents { background: var(--bg-card2); }
+    .agents-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem; margin-top: 3rem;
+    }
+    .agent-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+      opacity: 0; transform: scale(0.96);
+      transition: opacity 0.4s, transform 0.4s, border-color 0.3s, box-shadow 0.3s;
+    }
+    .agent-card.visible { opacity: 1; transform: scale(1); }
+    .agent-card:hover {
+      border-color: rgba(167,139,250,0.35);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    }
+    .agent-header { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem; }
+    .agent-icon { font-size: 1.5rem; }
+    .agent-name { font-weight: 700; font-size: 0.95rem; }
+    .agent-model {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.68rem;
+      color: var(--text-muted); margin-top: 0.15rem;
+    }
+    .agent-desc { font-size: 0.85rem; color: var(--text-dim); line-height: 1.6; }
+    .agent-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.9rem; }
+    .agent-tag {
+      background: rgba(108,99,255,0.1); border: 1px solid rgba(108,99,255,0.2);
+      color: var(--accent2); padding: 0.2rem 0.55rem;
+      border-radius: 100px; font-size: 0.72rem;
+    }
+
+    /* ─── CTA ─────────────────────────────────────────── */
+    #cta {
+      background: var(--bg); padding: 7rem 2rem;
+      text-align: center;
+    }
+    .cta-card {
+      max-width: 700px; margin: 0 auto;
+      background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(56,189,248,0.06));
+      border: 1px solid rgba(108,99,255,0.25);
+      border-radius: 20px; padding: 4rem 3rem;
+      position: relative; overflow: hidden;
+    }
+    .cta-card::before {
+      content: '';
+      position: absolute; top: -50%; left: 50%; transform: translateX(-50%);
+      width: 400px; height: 400px;
+      background: radial-gradient(ellipse, rgba(108,99,255,0.15), transparent 70%);
+      pointer-events: none;
+    }
+    .cta-card h2 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; letter-spacing: -0.03em; }
+    .cta-card p { color: var(--text-dim); margin: 1rem auto 2.2rem; max-width: 440px; line-height: 1.7; }
+    .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+    /* ─── FOOTER ─────────────────────────────────────── */
+    footer {
+      background: var(--bg-card); border-top: 1px solid var(--border);
+      padding: 2rem; text-align: center;
+      font-size: 0.82rem; color: var(--text-muted);
+    }
+    footer a { color: var(--text-dim); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+
+    /* ─── ANIMATIONS ─────────────────────────────────── */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
+      50% { opacity: 0.7; transform: translateX(-50%) scale(1.08); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    /* ─── RESPONSIVE ──────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav { padding: 0.8rem 1.2rem; }
+      .nav-links { display: none; }
+      .examples-layout { grid-template-columns: 1fr; }
+      .example-tabs { flex-direction: row; overflow-x: auto; }
+      .commands-split { grid-template-columns: 1fr; }
+      .cta-card { padding: 2.5rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">claude<span>forge</span></div>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#examples">Examples</a></li>
+    <li><a href="#commands">Commands</a></li>
+  </ul>
+  <a class="nav-cta" href="https://github.com/jainvaibhav62/claudeforge" target="_blank">GitHub ↗</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+
+  <div class="badge">
+    <span class="badge-dot"></span>
+    No API key required &mdash; works with any Claude IDE
+  </div>
+
+  <h1>Scaffold <em>AI agent projects</em><br/>in seconds, not hours</h1>
+  <p class="hero-sub">
+    One command gives you agents, slash commands, memory persistence, CI/CD pipelines,
+    and devcontainers — all pre-wired for Claude Code.
+  </p>
+
+  <div class="hero-actions">
+    <a class="btn-primary" href="#how">Get started →</a>
+    <a class="btn-secondary" href="#examples">See examples</a>
+  </div>
+
+  <div class="install-strip">
+    <p>Install via your preferred package manager</p>
+    <div class="install-tabs">
+      <button class="tab-btn active" onclick="switchTab('npm', this)">npm</button>
+      <button class="tab-btn" onclick="switchTab('pip', this)">pip</button>
+      <button class="tab-btn" onclick="switchTab('uv', this)">uv</button>
+    </div>
+    <div id="cmd-npm" class="install-cmd active">
+      <code>npm install -g claudeforge-cli</code>
+      <button class="copy-btn" onclick="copyCmd('npm install -g claudeforge-cli', this)">copy</button>
+    </div>
+    <div id="cmd-pip" class="install-cmd">
+      <code>pip install claudeforge</code>
+      <button class="copy-btn" onclick="copyCmd('pip install claudeforge', this)">copy</button>
+    </div>
+    <div id="cmd-uv" class="install-cmd">
+      <code>uv tool install claudeforge</code>
+      <button class="copy-btn" onclick="copyCmd('uv tool install claudeforge', this)">copy</button>
+    </div>
+  </div>
+
+  <!-- Animated Terminal -->
+  <div class="terminal-wrapper">
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <div class="terminal-title">~ claudeforge create my-api</div>
+      </div>
+      <div class="terminal-body" id="terminalBody">
+        <!-- Lines injected by JS -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section id="stats">
+  <div class="stats-grid">
+    <div class="stat"><div class="stat-num">1</div><div class="stat-label">command to scaffold</div></div>
+    <div class="stat"><div class="stat-num">25+</div><div class="stat-label">files generated</div></div>
+    <div class="stat"><div class="stat-num">10</div><div class="stat-label">built-in slash commands</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">API keys needed</div></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="features-header">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Everything you need for<br/><em>AI-native development</em></h2>
+      <p class="section-sub">claudeforge wires up the entire Claude Code ecosystem so you can ship, not configure.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(108,99,255,0.12)">🤖</div>
+        <h3>Pre-built Agents</h3>
+        <p>A production-ready code-reviewer agent ships out of the box. Add custom agents with one command — each with its own model, color, and description.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(56,189,248,0.1)">⚡</div>
+        <h3>10 Slash Commands</h3>
+        <p><code>/commit</code>, <code>/review-pr</code>, <code>/standup</code>, <code>/fix-issue</code> and more — ready in Claude Code chat the moment you scaffold.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(74,222,128,0.1)">🧠</div>
+        <h3>Persistent Memory</h3>
+        <p>Four structured memory files load every Claude session so context survives restarts. Tell Claude to "remember" facts and they persist forever.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(251,191,36,0.1)">🔒</div>
+        <h3>Safety Hooks</h3>
+        <p>Pre-configured hooks block <code>rm -rf</code>, <code>curl | bash</code>, and credential file edits before they execute. Ship fast without shooting yourself in the foot.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(248,113,113,0.1)">🏗️</div>
+        <h3>CI/CD out-of-the-box</h3>
+        <p>GitHub Actions workflows for Node.js, Python, Go, and Rust. PR templates, issue templates, CODEOWNERS — all auto-detected from your stack.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon" style="background:rgba(167,139,250,0.1)">🔌</div>
+        <h3>Stack Detection</h3>
+        <p>Scans your project for indicator files and auto-generates stack-specific commands, permissions, environment variables, and MCP server configs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="container" style="text-align:center">
+    <div class="section-label">How it works</div>
+    <h2 class="section-title">Zero to production in<br/><em>four steps</em></h2>
+    <p class="section-sub" style="margin:0.8rem auto 0">The CLI scaffolds files; the Claude Code IDE extension handles all the AI work. No extra API keys.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Scaffold your project</h3>
+          <p>Run <code>claudeforge create my-project</code> in your terminal. An interactive wizard asks for your project name, description, and tech stack — then generates 25+ files in seconds.</p>
+          <span class="step-code">claudeforge create my-api</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Set up context in the IDE</h3>
+          <p>Open the project in VS Code / JetBrains with the Claude Code extension. Run <code>/setup-project</code> in chat — Claude reads your codebase and auto-fills every config file.</p>
+          <span class="step-code">/setup-project "FastAPI with PostgreSQL"</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Generate starter code</h3>
+          <p>Run <code>/scaffold-structure</code> to create <code>src/</code>, <code>tests/</code>, and stack-appropriate starter files. Your project is now ready to develop.</p>
+          <span class="step-code">/scaffold-structure</span>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-content">
+          <h3>Use slash commands daily</h3>
+          <p>Commit, review PRs, run standups, and fix issues — all from Claude Code chat. Extend with custom agents and commands as your project grows.</p>
+          <span class="step-code">/commit &nbsp; /review-pr &nbsp; /standup</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXAMPLES -->
+<section id="examples">
+  <div class="container">
+    <div class="section-label">Examples</div>
+    <h2 class="section-title"><em>Real workflows</em>,<br/>ready to copy</h2>
+    <p class="section-sub">Click a scenario to see exactly what to run.</p>
+
+    <div class="examples-layout">
+      <div class="example-tabs">
+        <button class="ex-tab active" onclick="switchExample('ex1', this)">
+          <span class="ex-tab-label">New SaaS API</span>
+          <span class="ex-tab-sub">FastAPI + PostgreSQL</span>
+        </button>
+        <button class="ex-tab" onclick="switchExample('ex2', this)">
+          <span class="ex-tab-label">Next.js App</span>
+          <span class="ex-tab-sub">React + TypeScript</span>
+        </button>
+        <button class="ex-tab" onclick="switchExample('ex3', this)">
+          <span class="ex-tab-label">Go Microservice</span>
+          <span class="ex-tab-sub">REST + gRPC</span>
+        </button>
+        <button class="ex-tab" onclick="switchExample('ex4', this)">
+          <span class="ex-tab-label">Add Custom Agent</span>
+          <span class="ex-tab-sub">SQL reviewer</span>
+        </button>
+        <button class="ex-tab" onclick="switchExample('ex5', this)">
+          <span class="ex-tab-label">Daily Workflow</span>
+          <span class="ex-tab-sub">Commit + PR review</span>
+        </button>
+        <button class="ex-tab" onclick="switchExample('ex6', this)">
+          <span class="ex-tab-label">Add to Existing</span>
+          <span class="ex-tab-sub">Existing repo</span>
+        </button>
+      </div>
+
+      <div>
+        <!-- EX 1 -->
+        <div class="example-panel active" id="ex1">
+          <p class="example-desc">
+            Scaffold a production-ready Python API project with PostgreSQL, Redis, Docker, and GitHub Actions CI from scratch.
+          </p>
+          <div class="code-block">
+            <div class="code-header">
+              <span>terminal</span>
+              <button class="copy-code-btn" onclick="copyBlock('ex1-code', this)">Copy</button>
+            </div>
+            <div class="code-body" id="ex1-code">
+<span class="c-comment"># 1. Create the project scaffold</span>
+<span class="c-prompt">$</span> <span class="c-cmd">claudeforge create my-saas-api</span>
+<span class="c-out">  ✔ Project name: my-saas-api</span>
+<span class="c-out">  ✔ Description: SaaS REST API with auth and billing</span>
+<span class="c-out">  ✔ Stack: Python · FastAPI · PostgreSQL</span>
+<span class="c-out">  ✔ CI/CD: GitHub Actions</span>
+<span class="c-out">  ✔ Devcontainer: yes</span>
+<span class="c-success">  ✓ Scaffolded 27 files in my-saas-api/</span>
+
+<span class="c-comment"># 2. Open in VS Code with Claude Code, then in chat:</span>
+<span class="c-prompt">></span> <span class="c-cmd">/setup-project "FastAPI SaaS API with JWT auth, PostgreSQL, Redis cache, Stripe billing"</span>
+<span class="c-info">  Claude reading project… auto-filling CLAUDE.md, agents, memory</span>
+<span class="c-success">  ✓ Setup complete — run /scaffold-structure next</span>
+
+<span class="c-comment"># 3. Generate starter code</span>
+<span class="c-prompt">></span> <span class="c-cmd">/scaffold-structure</span>
+<span class="c-out">  Created: src/main.py, src/models/, src/routes/, tests/</span>
+<span class="c-success">  ✓ Starter structure ready</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- EX 2 -->
+        <div class="example-panel" id="ex2">
+          <p class="example-desc">
+            Set up a Next.js 14 app with TypeScript, Tailwind, and full GitHub Actions CI — in one command.
+          </p>
+          <div class="code-block">
+            <div class="code-header">
+              <span>terminal</span>
+              <button class="copy-code-btn" onclick="copyBlock('ex2-code', this)">Copy</button>
+            </div>
+            <div class="code-body" id="ex2-code">
+<span class="c-comment"># Already have a Next.js project? Add claudeforge to it.</span>
+<span class="c-prompt">$</span> <span class="c-cmd">cd my-nextjs-app</span>
+<span class="c-prompt">$</span> <span class="c-cmd">claudeforge init</span>
+<span class="c-info">  Detected: Next.js · TypeScript · Tailwind CSS</span>
+<span class="c-success">  ✓ Created .claude/, memory/, CLAUDE.md, .mcp.json</span>
+
+<span class="c-comment"># Generate GitHub Actions CI for Node.js</span>
+<span class="c-prompt">$</span> <span class="c-cmd">claudeforge github</span>
+<span class="c-info">  Stack detected: Node.js</span>
+<span class="c-success">  ✓ .github/workflows/ci.yml</span>
+<span class="c-success">  ✓ .github/pull_request_template.md</span>
+<span class="c-success">  ✓ .github/ISSUE_TEMPLATE/ (3 templates)</span>
+<span class="c-success">  ✓ .devcontainer/devcontainer.json</span>
+
+<span class="c-comment"># In Claude Code chat:</span>
+<span class="c-prompt">></span> <span class="c-cmd">/setup-project "Next.js 14 app with App Router, Tailwind, Prisma, and NextAuth"</span>
+<span class="c-success">  ✓ All configs auto-generated from your description</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- EX 3 -->
+        <div class="example-panel" id="ex3">
+          <p class="example-desc">
+            Bootstrap a Go microservice with module detection, golangci-lint CI, and a custom reviewer agent.
+          </p>
+          <div class="code-block">
+            <div class="code-header">
+              <span>terminal</span>
+              <button class="copy-code-btn" onclick="copyBlock('ex3-code', this)">Copy</button>
+            </div>
+            <div class="code-body" id="ex3-code">
+<span class="c-prompt">$</span> <span class="c-cmd">claudeforge create payment-service</span>
+<span class="c-out">  ✔ Project name: payment-service</span>
+<span class="c-out">  ✔ Stack: Go</span>
+<span class="c-out">  ✔ CI/CD: GitHub Actions (golangci-lint + go test)</span>
+<span class="c-success">  ✓ Scaffolded in payment-service/</span>
+
+<span class="c-comment"># Add a specialized migration safety reviewer</span>
+<span class="c-prompt">$</span> <span class="c-cmd">claudeforge add agent migration-reviewer \
+  --description "Reviews Go database migrations for atomicity, rollback safety, and index impact" \
+  --model claude-opus-4-5</span>
+<span class="c-success">  ✓ Created .claude/agents/migration-reviewer.md</span>
+
+<span class="c-comment"># In Claude Code chat:</span>
+<span class="c-prompt">></span> <span class="c-cmd">/setup-project "gRPC payment microservice with CQRS, PostgreSQL, and distributed tracing"</span>
+<span class="c-prompt">></span> <span class="c-cmd">/scaffold-structure</span>
+<span class="c-success">  ✓ Created cmd/, internal/, pkg/, migrations/, tests/</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- EX 4 -->
+        <div class="example-panel" id="ex4">
+          <p class="example-desc">
+            Add a SQL migration reviewer agent and a custom deploy command to any existing claudeforge project.
+          </p>
+          <div class="code-block">
+            <div class="code-header">
+              <span>terminal</span>
+              <button class="copy-code-btn" onclick="copyBlock('ex4-code', this)">Copy</button>
+            </div>
+            <div class="code-body" id="ex4-code">
+<span class="c-comment"># Add a SQL safety reviewer agent</span>
+<span class="c-prompt">$</span> <span class="c-cmd">claudeforge add agent sql-reviewer \
+  --description "Reviews SQL migrations for safety: checks for missing transactions, \
+  dangerous lock escalations, and missing rollback steps" \
+  --color "#f97316"</span>
+<span class="c-success">  ✓ .claude/agents/sql-reviewer.md</span>
+
+<span class="c-comment"># Add a /deploy slash command</span>
+<span class="c-prompt">$</span> <span class="c-cmd">claudeforge add command deploy \
+  --description "Run pre-deploy checks, deploy to staging, run smoke tests, notify Slack"</span>
+<span class="c-success">  ✓ .claude/commands/deploy.md</span>
+
+<span class="c-comment"># Add a skill for project conventions</span>
+<span class="c-prompt">$</span> <span class="c-cmd">claudeforge add skill api-conventions \
+  --description "REST API naming and error handling conventions for this repo"</span>
+<span class="c-success">  ✓ .claude/skills/api-conventions/SKILL.md</span>
+
+<span class="c-comment"># Check everything is wired up</span>
+<span class="c-prompt">$</span> <span class="c-cmd">claudeforge status</span>
+<span class="c-out">  Agents:   code-reviewer ✓  sql-reviewer ✓</span>
+<span class="c-out">  Commands: commit ✓  deploy ✓  review-pr ✓  standup ✓  …</span>
+<span class="c-out">  Skills:   api-conventions ✓  project-conventions ✓</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- EX 5 -->
+        <div class="example-panel" id="ex5">
+          <p class="example-desc">
+            A typical developer day using claudeforge slash commands in Claude Code chat.
+          </p>
+          <div class="code-block">
+            <div class="code-header">
+              <span>Claude Code chat (IDE)</span>
+              <button class="copy-code-btn" onclick="copyBlock('ex5-code', this)">Copy</button>
+            </div>
+            <div class="code-body" id="ex5-code">
+<span class="c-comment"># Morning: generate standup from last 2 days of commits</span>
+<span class="c-prompt">></span> <span class="c-cmd">/standup "last 2 days"</span>
+<span class="c-out">  Yesterday: Added JWT middleware, fixed race in auth handler</span>
+<span class="c-out">  Today: Migrating billing to Stripe v3, unblocked by auth work</span>
+<span class="c-out">  Blockers: None</span>
+
+<span class="c-comment"># Fix a bug fast</span>
+<span class="c-prompt">></span> <span class="c-cmd">/fix-issue "TypeError: 'NoneType' has no attribute 'stripe_id' in billing/checkout.py line 87"</span>
+<span class="c-info">  Reading billing/checkout.py…</span>
+<span class="c-info">  Root cause: user.stripe_id not checked before use when subscription is free-tier</span>
+<span class="c-success">  ✓ Added null guard at billing/checkout.py:87</span>
+
+<span class="c-comment"># Review your own PR before pushing</span>
+<span class="c-prompt">></span> <span class="c-cmd">/review-pr</span>
+<span class="c-out">  Correctness   ✓ LGTM</span>
+<span class="c-out">  Security      ~ Add rate limiting to /checkout endpoint</span>
+<span class="c-out">  Performance   ✓ LGTM</span>
+<span class="c-out">  Tests         ⚠ Missing test for free-tier null guard</span>
+
+<span class="c-comment"># Commit with a conventional commit message</span>
+<span class="c-prompt">></span> <span class="c-cmd">/commit</span>
+<span class="c-success">  ✓ fix(billing): guard against null stripe_id for free-tier users</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- EX 6 -->
+        <div class="example-panel" id="ex6">
+          <p class="example-desc">
+            Adding claudeforge to an existing repo without overwriting any of your current files.
+          </p>
+          <div class="code-block">
+            <div class="code-header">
+              <span>terminal</span>
+              <button class="copy-code-btn" onclick="copyBlock('ex6-code', this)">Copy</button>
+            </div>
+            <div class="code-body" id="ex6-code">
+<span class="c-prompt">$</span> <span class="c-cmd">cd my-existing-project</span>
+
+<span class="c-comment"># Preview what will be created (no writes)</span>
+<span class="c-prompt">$</span> <span class="c-cmd">claudeforge init --dry-run</span>
+<span class="c-out">  Would create: .claude/settings.json</span>
+<span class="c-out">  Would create: .claude/commands/ (10 files)</span>
+<span class="c-out">  Would create: memory/MEMORY.md</span>
+<span class="c-out">  Would create: CLAUDE.md</span>
+<span class="c-out">  … (22 more)</span>
+
+<span class="c-comment"># Run for real — never overwrites existing files</span>
+<span class="c-prompt">$</span> <span class="c-cmd">claudeforge init</span>
+<span class="c-success">  ✓ Scaffolded .claude/ infrastructure</span>
+
+<span class="c-comment"># Let Claude analyze your actual codebase (no description needed)</span>
+<span class="c-prompt">></span> <span class="c-cmd">/analyze-project</span>
+<span class="c-info">  Reading package.json, src/, tests/ …</span>
+<span class="c-info">  Detected: Express.js · TypeScript · Jest · PostgreSQL</span>
+<span class="c-success">  ✓ CLAUDE.md filled with real commands, architecture, gotchas</span>
+<span class="c-success">  ✓ settings.json updated with stack-specific tool permissions</span>
+<span class="c-success">  ✓ memory/ seeded with project context</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AGENTS SHOWCASE -->
+<section id="agents">
+  <div class="container">
+    <div class="section-label">Built-in & Custom Agents</div>
+    <h2 class="section-title">Agents for every<br/><em>engineering task</em></h2>
+    <p class="section-sub">One ships with claudeforge. Add more with a single command.</p>
+    <div class="agents-grid">
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon">🔍</div>
+          <div>
+            <div class="agent-name">code-reviewer</div>
+            <div class="agent-model">Built-in &middot; claude-sonnet-4-6</div>
+          </div>
+        </div>
+        <div class="agent-desc">Reviews PRs across 7 categories: correctness, security, error handling, performance, test coverage, style, and documentation.</div>
+        <div class="agent-tags">
+          <span class="agent-tag">correctness</span>
+          <span class="agent-tag">security</span>
+          <span class="agent-tag">performance</span>
+          <span class="agent-tag">tests</span>
+        </div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon">🗄️</div>
+          <div>
+            <div class="agent-name">sql-reviewer</div>
+            <div class="agent-model">Custom &middot; any model</div>
+          </div>
+        </div>
+        <div class="agent-desc">Checks migrations for missing transactions, lock escalations, missing rollback steps, and index impact before they reach production.</div>
+        <div class="agent-tags">
+          <span class="agent-tag">migrations</span>
+          <span class="agent-tag">safety</span>
+          <span class="agent-tag">rollback</span>
+        </div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon">🔐</div>
+          <div>
+            <div class="agent-name">security-auditor</div>
+            <div class="agent-model">Custom &middot; claude-opus-4-6</div>
+          </div>
+        </div>
+        <div class="agent-desc">Audits code for OWASP Top 10 issues, secrets in source, insecure dependencies, and auth/authz flaws — powered by a deeper model for critical paths.</div>
+        <div class="agent-tags">
+          <span class="agent-tag">OWASP</span>
+          <span class="agent-tag">secrets</span>
+          <span class="agent-tag">auth</span>
+        </div>
+      </div>
+      <div class="agent-card">
+        <div class="agent-header">
+          <div class="agent-icon">📝</div>
+          <div>
+            <div class="agent-name">doc-writer</div>
+            <div class="agent-model">Custom &middot; any model</div>
+          </div>
+        </div>
+        <div class="agent-desc">Generates README sections, API docs, and inline JSDoc/docstrings from code. Keeps docs in sync with implementation automatically.</div>
+        <div class="agent-tags">
+          <span class="agent-tag">README</span>
+          <span class="agent-tag">API docs</span>
+          <span class="agent-tag">JSDoc</span>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:1.5rem;font-size:0.85rem;color:var(--text-muted);text-align:center">
+      Add any of the custom agents above with:
+      <code style="font-family:'JetBrains Mono',monospace;color:var(--accent2)">claudeforge add agent &lt;name&gt; --description "..."</code>
+    </p>
+  </div>
+</section>
+
+<!-- COMMANDS REFERENCE -->
+<section id="commands">
+  <div class="container">
+    <div class="section-label">Reference</div>
+    <h2 class="section-title">All <em>commands</em> at a glance</h2>
+    <div class="commands-split">
+      <div class="cmd-group">
+        <h3>CLI (Terminal)</h3>
+        <div class="cmd-list">
+          <div class="cmd-item"><div class="cmd-name">create [name]</div><div class="cmd-desc">Interactive wizard — scaffold a complete project from scratch</div></div>
+          <div class="cmd-item"><div class="cmd-name">init</div><div class="cmd-desc">Add .claude/, memory/, hooks, and CLAUDE.md to any directory</div></div>
+          <div class="cmd-item"><div class="cmd-name">project "desc"</div><div class="cmd-desc">Detect stack and write SETUP_CONTEXT.md for the IDE</div></div>
+          <div class="cmd-item"><div class="cmd-name">add agent</div><div class="cmd-desc">Create a new specialized sub-agent in .claude/agents/</div></div>
+          <div class="cmd-item"><div class="cmd-name">add command</div><div class="cmd-desc">Create a new slash command in .claude/commands/</div></div>
+          <div class="cmd-item"><div class="cmd-name">add skill</div><div class="cmd-desc">Create a context skill in .claude/skills/</div></div>
+          <div class="cmd-item"><div class="cmd-name">github</div><div class="cmd-desc">Generate GitHub Actions CI, PR templates, and devcontainer</div></div>
+          <div class="cmd-item"><div class="cmd-name">status</div><div class="cmd-desc">Show configured agents, commands, memory files, and MCP servers</div></div>
+          <div class="cmd-item"><div class="cmd-name">upgrade</div><div class="cmd-desc">Update built-in hooks and commands to latest (safe, preserves edits)</div></div>
+          <div class="cmd-item"><div class="cmd-name">clear</div><div class="cmd-desc">Remove all claudeforge files (keeps your source code)</div></div>
+        </div>
+      </div>
+      <div class="cmd-group">
+        <h3>Slash Commands (Claude Code IDE)</h3>
+        <div class="cmd-list">
+          <div class="cmd-item"><div class="cmd-name">/analyze-project</div><div class="cmd-desc">Auto-reads codebase and fills all configs — no description needed</div></div>
+          <div class="cmd-item"><div class="cmd-name">/setup-project</div><div class="cmd-desc">AI-fills CLAUDE.md, agents, commands, memory from your description</div></div>
+          <div class="cmd-item"><div class="cmd-name">/scaffold-structure</div><div class="cmd-desc">Creates src/, tests/, and stack-appropriate starter files</div></div>
+          <div class="cmd-item"><div class="cmd-name">/project-health</div><div class="cmd-desc">Audits your AI setup and gives prioritized improvement suggestions</div></div>
+          <div class="cmd-item"><div class="cmd-name">/memory-sync</div><div class="cmd-desc">Reviews session context and updates persistent memory files</div></div>
+          <div class="cmd-item"><div class="cmd-name">/commit</div><div class="cmd-desc">Read git diff, stage files, and write a conventional commit</div></div>
+          <div class="cmd-item"><div class="cmd-name">/review-pr</div><div class="cmd-desc">Review branch diff across 7 quality categories</div></div>
+          <div class="cmd-item"><div class="cmd-name">/fix-issue "error"</div><div class="cmd-desc">Locate bug, form hypothesis, apply minimal fix</div></div>
+          <div class="cmd-item"><div class="cmd-name">/standup</div><div class="cmd-desc">Generate standup summary from recent git commits</div></div>
+          <div class="cmd-item"><div class="cmd-name">/explain-codebase</div><div class="cmd-desc">Explain architecture, flows, and what files to read first</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <div class="cta-card">
+    <h2>Ready to forge your first project?</h2>
+    <p>Install claudeforge, run one command, and start building with AI — no API keys, no setup friction.</p>
+    <div class="cta-actions">
+      <a class="btn-primary" href="https://github.com/jainvaibhav62/claudeforge" target="_blank">View on GitHub →</a>
+      <a class="btn-secondary" href="#how">Read the guide</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>
+    claudeforge &mdash; MIT License &middot;
+    <a href="https://github.com/jainvaibhav62/claudeforge" target="_blank">GitHub</a> &middot;
+    <a href="https://github.com/jainvaibhav62/claudeforge/issues" target="_blank">Issues</a> &middot;
+    Built for the Claude Code ecosystem
+  </p>
+</footer>
+
+<script>
+  /* ── Terminal animation ───────────────────────────── */
+  const lines = [
+    { text: '$ claudeforge create my-api', cls: 'c-prompt c-cmd', delay: 0 },
+    { text: '  ✔ Project name: my-api', cls: 'c-out', delay: 700 },
+    { text: '  ✔ Description: REST API with auth', cls: 'c-out', delay: 1100 },
+    { text: '  ✔ Stack: Python · FastAPI · PostgreSQL', cls: 'c-out', delay: 1500 },
+    { text: '  ✔ CI/CD: GitHub Actions', cls: 'c-out', delay: 1900 },
+    { text: '  ✓ Scaffolded 27 files in my-api/', cls: 'c-success', delay: 2500 },
+    { text: '', cls: '', delay: 2900 },
+    { text: '  Opening Claude Code… running /setup-project', cls: 'c-info', delay: 3200 },
+    { text: '  ✓ CLAUDE.md auto-generated', cls: 'c-success', delay: 3900 },
+    { text: '  ✓ agents/code-reviewer.md ready', cls: 'c-success', delay: 4200 },
+    { text: '  ✓ 10 slash commands installed', cls: 'c-success', delay: 4500 },
+    { text: '  ✓ memory/ seeded with project context', cls: 'c-success', delay: 4800 },
+    { text: '  ✓ .github/workflows/ci.yml generated', cls: 'c-success', delay: 5100 },
+    { text: '', cls: '', delay: 5400 },
+    { text: '  Ready. Open my-api/ in VS Code →', cls: 'c-info', delay: 5700 },
+  ];
+
+  function renderTerminal() {
+    const body = document.getElementById('terminalBody');
+    lines.forEach(({ text, cls, delay }) => {
+      setTimeout(() => {
+        const div = document.createElement('div');
+        div.className = 't-line ' + cls;
+        if (text === '') { div.innerHTML = '&nbsp;'; }
+        else {
+          if (text.startsWith('$ ')) {
+            div.innerHTML = `<span class="t-prompt">$</span> <span class="t-cmd">${text.slice(2)}</span>`;
+          } else {
+            div.textContent = text;
+          }
+        }
+        body.appendChild(div);
+        requestAnimationFrame(() => div.classList.add('visible'));
+      }, delay);
+    });
+    // Add blinking cursor at end
+    setTimeout(() => {
+      const cur = document.createElement('div');
+      cur.className = 't-line visible';
+      cur.innerHTML = '<span class="t-prompt">$</span> <span class="t-cursor"></span>';
+      body.appendChild(cur);
+    }, 6200);
+  }
+  renderTerminal();
+
+  /* ── Install tabs ────────────────────────────────── */
+  function switchTab(id, btn) {
+    document.querySelectorAll('.install-cmd').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('cmd-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  /* ── Examples ────────────────────────────────────── */
+  function switchExample(id, btn) {
+    document.querySelectorAll('.example-panel').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.ex-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  /* ── Copy helpers ────────────────────────────────── */
+  function copyCmd(text, btn) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'copied!';
+      setTimeout(() => btn.textContent = 'copy', 1800);
+    });
+  }
+
+  function copyBlock(id, btn) {
+    const el = document.getElementById(id);
+    const text = el.innerText;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 1800);
+    });
+  }
+
+  /* ── Scroll-triggered animations ────────────────── */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll(
+    '.feature-card, .step, .stat, .agent-card, .cmd-item'
+  ).forEach((el, i) => {
+    el.style.transitionDelay = (i % 4) * 0.07 + 's';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

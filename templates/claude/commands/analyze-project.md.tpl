@@ -1,6 +1,6 @@
 ---
 description: Analyze an existing codebase and auto-generate the full Claude Code setup — CLAUDE.md, skills, agents, commands, and memory — by reading actual code, patterns, and conventions already in the project. No description required.
-allowed-tools: Read, Write, Edit, MultiEdit, Bash(git log:*), Bash(git diff:*), Bash(ls:*), Bash(find:*), Bash(cat:*), Bash(wc:*)
+allowed-tools: Read, Write, Edit, MultiEdit, Bash(git log:*), Bash(git diff:*), Bash(ls:*), Bash(find:*), Bash(cat:*), Bash(wc:*), Bash(head:*), Bash(sort:*), Bash(uniq:*), Bash(xargs:*), Bash(test:*)
 ---
 
 ## Step 1 — Deep Codebase Scan

@@ -10,6 +10,7 @@ const statusCommand = require('../src/commands/status');
 const upgradeCommand = require('../src/commands/upgrade');
 const createCommand = require('../src/commands/create');
 const githubCommand = require('../src/commands/github');
+const clearCommand = require('../src/commands/clear');
 
 program
   .name('claudeforge')
@@ -151,5 +152,29 @@ Examples:
   $ claudeforge github --stack python --no-devcontainer
   `)
   .action(githubCommand);
+
+// ── clear ─────────────────────────────────────────────────────────────────────
+program
+  .command('clear')
+  .description('Remove all claudeforge-generated files and start fresh (.claude/, memory/, CLAUDE.md, etc.)')
+  .option('-d, --dir <path>', 'Target directory (defaults to current directory)')
+  .option('-n, --dry-run',    'Preview what would be deleted without removing anything')
+  .option('-f, --force',      'Skip confirmation prompt')
+  .addHelpText('after', `
+Removes everything claudeforge created:
+  .claude/        — settings, agents, commands, hooks, rules, skills
+  memory/         — all memory files
+  CLAUDE.md       — project context file
+  CLAUDE.local.md — personal context file
+  .mcp.json       — MCP server config
+
+Your source code, git history, and other project files are never touched.
+
+Examples:
+  $ claudeforge clear             # interactive confirmation
+  $ claudeforge clear --dry-run   # preview what would be deleted
+  $ claudeforge clear --force     # skip confirmation prompt
+  `)
+  .action(clearCommand);
 
 program.parse(process.argv);

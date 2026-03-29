@@ -10,17 +10,21 @@ Do not ask the user for a description. Read the codebase directly to infer every
 ### 1a. Project identity
 
 !`ls -la`
-!`test -f package.json && cat package.json || test -f pyproject.toml && cat pyproject.toml || test -f go.mod && cat go.mod || test -f Cargo.toml && cat Cargo.toml || echo "(no manifest found)"`
-!`test -f README.md && head -60 README.md || echo "(no README)"`
+!`git log --oneline -20`
 
 ### 1b. Full dependency map
 
-!`test -f package.json && cat package.json || echo "(no package.json)"`
-!`test -f requirements.txt && cat requirements.txt || test -f pyproject.toml && cat pyproject.toml || echo "(no python deps)"`
-!`test -f go.mod && cat go.mod || echo "(no go.mod)"`
-!`test -f Cargo.toml && cat Cargo.toml || echo "(no Cargo.toml)"`
-!`test -f pom.xml && head -80 pom.xml || echo "(no pom.xml)"`
-!`test -f Gemfile && cat Gemfile || echo "(no Gemfile)"`
+Use the Read tool to attempt reading each of these files. Skip silently if a file doesn't exist — do not error:
+
+- `package.json`
+- `requirements.txt`
+- `pyproject.toml`
+- `go.mod`
+- `Cargo.toml`
+- `pom.xml`
+- `Gemfile`
+- `composer.json`
+- `README.md`
 
 ### 1c. Project structure
 
@@ -29,36 +33,32 @@ Do not ask the user for a description. Read the codebase directly to infer every
 
 ### 1d. Read actual source code — infer real patterns
 
-Read the most representative files in each layer of the project. For each category below, find and read 2–3 real files:
+Use the Read tool to open the most representative files in each layer. Try each location — skip if it doesn't exist:
 
-- **Entry points**: `main.py`, `index.ts`, `main.go`, `app.py`, `server.js`, etc.
-- **Route/controller layer**: files in `routes/`, `controllers/`, `handlers/`, `api/`, `pages/api/`
-- **Service/business logic layer**: files in `services/`, `lib/`, `internal/`, `core/`
-- **Data/database layer**: files in `models/`, `db/`, `prisma/`, `migrations/`, `schema/`
-- **UI components** (if frontend): files in `components/`, `pages/`, `views/`, `screens/`
-- **Tests**: files in `tests/`, `__tests__/`, `spec/`, `test/`
-- **Config**: `tsconfig.json`, `eslint.config.*`, `.prettierrc`, `pytest.ini`, `ruff.toml`, etc.
+- **Entry points**: `main.py`, `index.ts`, `main.go`, `app.py`, `server.js`, `app.js`
+- **Routes/controllers**: look inside `routes/`, `controllers/`, `handlers/`, `api/`, `pages/api/`
+- **Services/business logic**: look inside `services/`, `lib/`, `internal/`, `core/`
+- **Data/database**: look inside `models/`, `db/`, `prisma/schema.prisma`, `migrations/`
+- **UI components**: look inside `components/`, `pages/`, `views/`, `screens/`
+- **Tests**: look inside `tests/`, `__tests__/`, `spec/`, `test/`
+- **Config files**: `tsconfig.json`, `.eslintrc*`, `.prettierrc`, `pytest.ini`, `ruff.toml`
 
-Read enough code to answer:
-- What frameworks and libraries are actually used (not just listed in deps)?
+Read enough real code to answer:
+- What frameworks and libraries are actually used?
 - How are files structured and named?
-- What patterns repeat across files (error handling, auth checks, response format, logging)?
-- What conventions are enforced (naming, imports, exports)?
+- What patterns repeat across files (error handling, auth, response format, logging)?
 - How are tests written?
 
-### 1e. Git history — understand how the project evolved
+### 1e. CI/CD and infrastructure
 
-!`git log --oneline -20 || echo "(no git history)"`
-!`git log --pretty=format:"%s" -50 | sort | uniq -c | sort -rn | head -20 || echo "(no commits)"`
+Use the Read tool to attempt reading each — skip silently if missing:
 
-What do the commit messages reveal about the team's workflow and focus areas?
-
-### 1f. Existing CI/CD and infrastructure
-
-!`test -d .github/workflows && find .github/workflows -name "*.yml" | head -5 | xargs head -100 || echo "(no GitHub Actions)"`
-!`test -f Dockerfile && head -40 Dockerfile || echo "(no Dockerfile)"`
-!`test -f docker-compose.yml && cat docker-compose.yml || echo "(no docker-compose)"`
-!`test -f .env.example && cat .env.example || test -f .env.sample && cat .env.sample || echo "(no .env.example)"`
+- `.github/workflows/` — use find to list yml files then read them
+- `Dockerfile`
+- `docker-compose.yml`
+- `.env.example`
+- `.env.sample`
+- `Makefile`
 
 ---
 

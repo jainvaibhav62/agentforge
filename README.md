@@ -61,6 +61,7 @@ node --version   # should print v18 or higher
   - [github](#github--cicd--devcontainer)
   - [status](#status--show-whats-configured)
   - [upgrade](#upgrade--update-built-in-templates)
+- [clear](#clear--remove-all-claudeforge-files)
 - [Slash Commands (in IDE chat)](#slash-commands-in-ide-chat)
 - [What Gets Scaffolded](#what-gets-scaffolded)
 - [How It Works](#how-it-works)
@@ -334,6 +335,29 @@ claudeforge upgrade --all       # also update CLAUDE.md, settings.json, agents (
 ```
 
 By default, only **infrastructure files** are updated (hook scripts, rules, built-in slash commands). Your edited files (`CLAUDE.md`, `settings.json`, custom agents) are untouched.
+
+---
+
+### `clear` — Remove all claudeforge files
+
+```bash
+claudeforge clear             # interactive confirmation
+claudeforge clear --dry-run   # preview what would be deleted
+claudeforge clear --force     # skip confirmation prompt
+```
+
+Wipes everything claudeforge created so you can start fresh:
+
+| Removed | Kept |
+|---------|------|
+| `.claude/` (agents, commands, hooks, rules, skills) | Your source code |
+| `memory/` | Git history |
+| `CLAUDE.md`, `CLAUDE.local.md` | `.github/` CI/CD files |
+| `.mcp.json`, `SETUP_CONTEXT.md` | All other project files |
+
+Requires typing `yes` to confirm unless `--force` is passed.
+
+After clearing, run `claudeforge init` to scaffold fresh or `claudeforge create` to start over with the wizard.
 
 ---
 

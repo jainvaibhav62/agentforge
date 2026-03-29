@@ -114,6 +114,19 @@ uv tool install claudeforge
 claudeforge --version
 ```
 
+### Update to latest version
+
+```bash
+# npm
+npm update -g claudeforge-cli
+
+# pip
+pip install --upgrade claudeforge
+
+# uv
+uv tool upgrade claudeforge
+```
+
 ---
 
 ## Quick Start

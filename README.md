@@ -411,6 +411,43 @@ The activity log (`.claude/agent-activity.jsonl`) is gitignored — it's local r
 
 > **Note:** Run `claudeforge watch` in a separate terminal while working in Claude Code. The dashboard updates live as you run slash commands or let agents work.
 
+**Example 1 — Watch a PR review unfold**
+
+```bash
+# Terminal 1 — start the dashboard
+claudeforge watch
+# → Opens http://localhost:7337
+
+# Terminal 2 (or Claude Code chat) — trigger a review
+# In Claude Code chat:
+# /review-pr
+
+# What you see in the dashboard:
+# code-reviewer ●  Read    src/billing/checkout.py
+# code-reviewer ●  Grep    pattern: "TODO|FIXME|HACK"
+# code-reviewer ●  Read    tests/billing/test_checkout.py
+# code-reviewer ●  Bash    git diff main...HEAD -- src/billing/
+# code-reviewer ✓  done    7 categories reviewed — 2 warnings
+```
+
+**Example 2 — Watch Claude fix a bug**
+
+```bash
+# Terminal 1 — start the dashboard
+claudeforge watch
+
+# In Claude Code chat:
+# /fix-issue "TypeError: 'NoneType' has no attribute 'stripe_id' in checkout.py:87"
+
+# What you see in the dashboard:
+# claude ●  Grep    pattern: "stripe_id"
+# claude ●  Read    src/billing/checkout.py
+# claude ●  Read    src/models/user.py
+# claude ●  Edit    src/billing/checkout.py   ← the fix lands here
+# claude ●  Bash    pytest tests/billing/test_checkout.py -q
+# claude ✓  done    1 file changed, null guard added at line 87
+```
+
 ---
 
 ## Slash Commands (in IDE chat)

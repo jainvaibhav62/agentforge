@@ -1126,26 +1126,56 @@
             </div>
           </div>
 
-          <div class="code-block">
+          <!-- Sub-tabs for watch examples -->
+          <div style="display:flex;gap:.4rem;margin-bottom:.75rem;flex-wrap:wrap">
+            <button class="tab-btn active" id="wtab1" onclick="switchWatchTab(1)">Example 1 — PR Review</button>
+            <button class="tab-btn" id="wtab2" onclick="switchWatchTab(2)">Example 2 — Fix a Bug</button>
+          </div>
+
+          <!-- Watch example 1 -->
+          <div class="code-block" id="watchEx1">
             <div class="code-header">
-              <span>terminal — separate window</span>
-              <button class="copy-code-btn" onclick="copyBlock('ex7-code', this)">Copy</button>
+              <span>Watch a PR review unfold</span>
+              <button class="copy-code-btn" onclick="copyBlock('ex7-code1', this)">Copy</button>
             </div>
-            <div class="code-body" id="ex7-code">
-<span class="c-comment"># Start the dashboard in a separate terminal tab</span>
+            <div class="code-body" id="ex7-code1">
+<span class="c-comment"># Terminal — start the dashboard</span>
 <span class="c-prompt">$</span> <span class="c-cmd">claudeforge watch</span>
 <span class="c-success">  ✓ Agent dashboard running at http://localhost:7337</span>
-<span class="c-info">  Activity log: .claude/agent-activity.jsonl</span>
-<span class="c-info">  Press Ctrl+C to stop</span>
 
-<span class="c-comment"># Now run any slash command in Claude Code — the dashboard updates live</span>
+<span class="c-comment"># Claude Code chat — trigger a PR review</span>
 <span class="c-prompt">></span> <span class="c-cmd">/review-pr</span>
-<span class="c-out">  Dashboard: code-reviewer ● running  Read src/auth.ts</span>
-<span class="c-out">  Dashboard: code-reviewer ● running  Grep "TODO|FIXME"</span>
-<span class="c-out">  Dashboard: code-reviewer ✓ done     7 categories reviewed</span>
 
-<span class="c-comment"># Custom port, no auto-open</span>
-<span class="c-prompt">$</span> <span class="c-cmd">claudeforge watch --port 8080 --no-browser</span>
+<span class="c-comment"># Dashboard streams live:</span>
+<span class="c-out">  code-reviewer ●  Read    src/billing/checkout.py</span>
+<span class="c-out">  code-reviewer ●  Grep    pattern: "TODO|FIXME|HACK"</span>
+<span class="c-out">  code-reviewer ●  Read    tests/billing/test_checkout.py</span>
+<span class="c-out">  code-reviewer ●  Bash    git diff main...HEAD -- src/billing/</span>
+<span class="c-success">  code-reviewer ✓  done    7 categories reviewed — 2 warnings</span>
+            </div>
+          </div>
+
+          <!-- Watch example 2 -->
+          <div class="code-block" id="watchEx2" style="display:none">
+            <div class="code-header">
+              <span>Watch Claude fix a bug</span>
+              <button class="copy-code-btn" onclick="copyBlock('ex7-code2', this)">Copy</button>
+            </div>
+            <div class="code-body" id="ex7-code2">
+<span class="c-comment"># Terminal — start the dashboard</span>
+<span class="c-prompt">$</span> <span class="c-cmd">claudeforge watch</span>
+<span class="c-success">  ✓ Agent dashboard running at http://localhost:7337</span>
+
+<span class="c-comment"># Claude Code chat — ask Claude to fix a bug</span>
+<span class="c-prompt">></span> <span class="c-cmd">/fix-issue "TypeError: 'NoneType' has no attribute 'stripe_id' in checkout.py:87"</span>
+
+<span class="c-comment"># Dashboard streams live:</span>
+<span class="c-out">  claude ●  Grep    pattern: "stripe_id"</span>
+<span class="c-out">  claude ●  Read    src/billing/checkout.py</span>
+<span class="c-out">  claude ●  Read    src/models/user.py</span>
+<span class="c-warn">  claude ●  Edit    src/billing/checkout.py   ← fix lands here</span>
+<span class="c-out">  claude ●  Bash    pytest tests/billing/ -q</span>
+<span class="c-success">  claude ✓  done    null guard added at checkout.py:87</span>
             </div>
           </div>
         </div>
@@ -1509,6 +1539,14 @@
     el.style.transitionDelay = (i % 4) * 0.07 + 's';
     observer.observe(el);
   });
+
+  /* ── Watch sub-tabs ─────────────────────────────── */
+  function switchWatchTab(n) {
+    document.getElementById('watchEx1').style.display = n === 1 ? 'block' : 'none';
+    document.getElementById('watchEx2').style.display = n === 2 ? 'block' : 'none';
+    document.getElementById('wtab1').classList.toggle('active', n === 1);
+    document.getElementById('wtab2').classList.toggle('active', n === 2);
+  }
 
   /* ── Mini dashboard demo (ex7) ──────────────────── */
   const demoEvents = [
